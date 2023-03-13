@@ -1,3 +1,4 @@
+from django.contrib.auth.hashers import make_password
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -7,7 +8,7 @@ from django.contrib.auth.models import AbstractUser
 class UserRoles:
     USER = "user"
     ADMIN = "admin"
-    choices = (
+    CHOICES = (
         (USER, USER),
         (ADMIN, ADMIN),
     )
@@ -15,7 +16,7 @@ class UserRoles:
 
 class User(AbstractUser):
     first_name = models.CharField(max_length=30)
-    password = models.CharField(max_length=50)
+    password = models.CharField(max_length=255)
     role = models.CharField(
         max_length=9, choices=UserRoles.choices, default=UserRoles.USER)
 
