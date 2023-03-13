@@ -18,8 +18,7 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=30)
     password = models.CharField(max_length=255)
     role = models.CharField(
-        max_length=9, choices=UserRoles.choices, default=UserRoles.USER)
-
+        max_length=9, choices=UserRoles.CHOICES, default=UserRoles.USER)
     def is_admin(self):
         if self.role == UserRoles.ADMIN:
             return True
