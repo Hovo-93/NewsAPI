@@ -27,7 +27,7 @@ class User(AbstractUser):
 
 class News(models.Model):
     author = models.ForeignKey(User, on_delete=models.DO_NOTHING,
-                               verbose_name="Автор", related_name='news')
+                               verbose_name="Автор")
     title = models.CharField(max_length=200, verbose_name='Заголовок')
     content = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
