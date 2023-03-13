@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13.1
+    privileged: true
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin1234
+      POSTGRES_DB: news
+#  admainer:
+#    image: adminer:4.7.8-standalone
+#    restart: always
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - db
+  web:
+    build: .
+    restart: always
+    privileged: true
+    ports:
+      - "8080:8080"
+    depends_on:
+        - db
+    env_file:
+      - ./.env
+  nginx:
+    build: ./nginx
+    ports:
+      - "8000:80"
+    depends_on:
+       - web
+
