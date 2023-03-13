@@ -1,6 +1,5 @@
 import datetime
 
-from django.shortcuts import render, redirect
 from pytz import utc
 from rest_framework import generics, status
 from rest_framework.exceptions import PermissionDenied
@@ -28,15 +27,14 @@ class NewsDetail(generics.RetrieveUpdateDestroyAPIView):
     def perform_update(self, serializer):
         instance = serializer.save()
         print(instance.author)
-        # if instance.author != self.request.user:
         if not (IsOwnerOrReadOnly or IsAdminRole):
             raise PermissionDenied("You do not have permission to perform this action.")
-
         instance.created_at = datetime.datetime.utcnow().replace(tzinfo=utc)
         instance.save()
 
 
 class CommentList(generics.ListCreateAPIView):
+    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
@@ -44,13 +42,10 @@ class CommentList(generics.ListCreateAPIView):
         news_item = News.objects.get(id=self.kwargs['pk'])
         serializer.save(user=self.request.user, news=news_item)
 
-    def get_queryset(self):
-        news_item = News.objects.get(id=self.kwargs['pk'])
-        return Comment.objects.filter(news=news_item)
 
 
 class CommentDetail(generics.RetrieveDestroyAPIView):
-    queryset = Comment.objects.all() # todo nahooy nado ?
+    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsAdminRole | IsNewsAuthor]
 
@@ -62,10 +57,12 @@ class CommentDetail(generics.RetrieveDestroyAPIView):
 
 # todo rename
 class LikeList(generics.ListCreateAPIView):
+    queryset = Like.objects.all()
     serializer_class = LikeSerializer
     permission_classes = [IsAuthenticatedOrReadOnly,IsLikedNews]
 
     def perform_create(self, serializer):
-        print('aaa')
         news_item = News.objects.get(id=self.kwargs['pk'])
         serializer.save(user=self.request.user, news=news_item)
+
+
