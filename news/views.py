@@ -1,20 +1,16 @@
 import datetime
 
 from django.shortcuts import render, redirect
-from rest_framework.response import Response
 from pytz import utc
-from rest_framework import viewsets, generics, status
+from rest_framework import generics, status
 from rest_framework.exceptions import PermissionDenied
-from rest_framework.mixins import DestroyModelMixin, UpdateModelMixin, RetrieveModelMixin, \
-    CreateModelMixin, ListModelMixin
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework.response import Response
 
-from .models import News, User, UserRoles, Comment, Like
-from .permissions import IsOwnerOrReadOnly, IsAdminRole, IsNewsAuthor
-
-from .serializers import NewsSerializer, CommentSerializer, LikeSerializer
+from .models import News, Comment, Like, UserRoles
 from .paginations import NewsListPagination
+from .permissions import IsOwnerOrReadOnly, IsAdminRole, IsNewsAuthor, IsLikedNews
+from .serializers import NewsSerializer, CommentSerializer, LikeSerializer
 
 
 class NewsList(generics.ListCreateAPIView):
@@ -45,18 +41,18 @@ class CommentList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
-        news_item = News.objects.get(id=self.kwargs['id'])
+        news_item = News.objects.get(id=self.kwargs['pk'])
         serializer.save(user=self.request.user, news=news_item)
 
     def get_queryset(self):
-        news_item = News.objects.get(id=self.kwargs['id'])
+        news_item = News.objects.get(id=self.kwargs['pk'])
         return Comment.objects.filter(news=news_item)
 
 
-class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Comment.objects.all()
+class CommentDetail(generics.RetrieveDestroyAPIView):
+    queryset = Comment.objects.all() # todo nahooy nado ?
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsAdminRole, IsNewsAuthor]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsAdminRole | IsNewsAuthor]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()  # get)object() returns the object instance if it nor http404 exep
@@ -64,20 +60,12 @@ class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+# todo rename
 class LikeList(generics.ListCreateAPIView):
     serializer_class = LikeSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly,IsLikedNews]
 
     def perform_create(self, serializer):
-        news_item = News.objects.get(id=self.kwargs['id'])
+        print('aaa')
+        news_item = News.objects.get(id=self.kwargs['pk'])
         serializer.save(user=self.request.user, news=news_item)
-
-    def get_queryset(self):
-        news_item = News.objects.get(id=self.kwargs['id'])
-        return Like.objects.filter(news=news_item)
-
-
-class LikeDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Like.objects.all()
-    serializer_class = LikeSerializer
-    permission_classes = [AllowAny]
