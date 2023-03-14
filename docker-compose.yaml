@@ -23,6 +23,10 @@ services:
     privileged: true
     ports:
       - "8080:8080"
+    command: bash -c "python manage.py collectstatic --noinput 
+             && python manage.py makemigrations
+             && python manage.py migrate 
+             && gunicorn NewsService.wsgi -b 0.0.0.0:8080"
     depends_on:
         - db
     env_file:
