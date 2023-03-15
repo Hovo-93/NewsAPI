@@ -84,7 +84,7 @@ GET http://localhost:8000/api/v1/news/
 ```
 ### Создаем новость
 ```json
-POST http://127.0.0.1/api/v1/accrual/
+POST http://localhost:8000/api/v1/news/
 
 # Body(json)
 {
@@ -92,43 +92,47 @@ POST http://127.0.0.1/api/v1/accrual/
     "content": "lorem content"
 }
 ```
-### PUT news (обновляем новость, проерка на атворизацию, проверка на наличие прав)
-
-json
-POST http://todo
+### Обновляем новость 
+```json
+POST http://localhost:8000/api/v1/news/1
 
 # Body(json)
 {
-    #todo
+    "title":
+    "conent":
 }
+```
 ### DELETE news
-
-json
+```json
 POST http://127.0.0.1/todo
 
 # Body(json)
 {
     
 }
-### GET comments (получение списка комментариев новости с пагинацией)
+```        
+### Получение комментариев
+```json
+GET hhttp://localhost:8000/api/v1/news/1/comments/
+```
 
-json
-GET http://127.0.0.1/todo
-
-# Body(json)
-{
-    "id": 1
-}
-### POST comments (создание нового комментария, проверка на авторизацию)
-
-json
-GET http://127.0.0.1/todo
+### Создание нового комментария
+```json
+POST http://localhost:8000/api/v1/news/1/comments/
 
 # Body(json)
 {
+    "text": "some comment"
+}
+```
+### Удаление Комментария
+```json
+DELETE http://localhost:8000/api/v1/news/comments/1/
+{
     "id": 1
 }
-
-### DELETE comments 
-
-### Like
+```
+### Like 
+```json
+POST http://localhost:8000/api/v1/news/2/like/
+```
