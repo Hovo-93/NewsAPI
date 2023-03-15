@@ -9,6 +9,6 @@ urlpatterns = [
     path('news/<int:pk>/', NewsDetail.as_view()),
     path('news/<int:pk>/comments/', CommentList.as_view(), name='comment-list'),
     path('news/comments/<int:pk>/', CommentDetail.as_view(), name='comment-detail'),
-    path('news/<int:pk>/like', LikeList.as_view(), name='like-list'),
+    path('news/<int:pk>/like/', LikeList.as_view(), name='like-list'),
 
 ]
