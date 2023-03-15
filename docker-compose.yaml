@@ -27,14 +27,19 @@ services:
              && python manage.py makemigrations
              && python manage.py migrate 
              && gunicorn NewsService.wsgi -b 0.0.0.0:8080"
+    volumes:
+      - static_volume:/home/app/web/staticfiles
     depends_on:
         - db
     env_file:
       - ./.env
   nginx:
     build: ./nginx
+    volumes:
+      - static_volume:/home/app/web/staticfiles
     ports:
       - "8000:80"
     depends_on:
        - web
-
+volumes:
+  static_volume:
