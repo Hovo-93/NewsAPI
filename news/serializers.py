@@ -17,11 +17,11 @@ class LikeSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    user = UserRelatedSerializer()
-
+    author = serializers.ReadOnlyField(source='user.username')
     class Meta:
         model = Comment
-        fields = ('id', 'user', 'text', 'created_at')
+        fields = ('id', 'text','author','created_at')
+
 
 
 class NewsSerializer(serializers.ModelSerializer):
