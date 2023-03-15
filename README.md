@@ -1,4 +1,5 @@
 # NewsApi Service
+## На сервере http://213.189.201.222:8000/swagger/
 ## Описание
 Список технологий: Python, Django Rest Framework, Docker, Gunicorn, Nginx, PostgreSQL
 
@@ -102,13 +103,13 @@ POST http://localhost:8000/api/v1/news/1
     "conent":
 }
 ```
-### DELETE news
+### Удаление новостей
 ```json
-POST http://127.0.0.1/todo
+DELETE http://localhost:8000/api/v1/news/1
 
 # Body(json)
 {
-    
+   "id":1   
 }
 ```        
 ### Получение комментариев
@@ -136,3 +137,5 @@ DELETE http://localhost:8000/api/v1/news/comments/1/
 ```json
 POST http://localhost:8000/api/v1/news/2/like/
 ```
+
+
