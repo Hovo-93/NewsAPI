@@ -1,5 +1,5 @@
 # NewsApi Service
-## На сервере http://213.189.201.222:8000/swagger/
+## На сервере http://31.31.203.133:8000/swagger/
 ## Описание
 Список технологий: Python, Django Rest Framework, Docker, Gunicorn, Nginx, PostgreSQL
 
